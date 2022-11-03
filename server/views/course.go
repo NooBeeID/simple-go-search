@@ -7,12 +7,12 @@ import (
 )
 
 type CourseCreated struct {
-	ID          uuid.UUID
-	Title       string
-	ImgCover    string
-	Description string
-	Price       int
-	Category    string
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	ImgCover    string    `json:"img_cover"`
+	Description string    `json:"desc"`
+	Price       int       `json:"price"`
+	Category    string    `json:"category"`
 }
 
 func NewCourseCreated(courseModel *models.Course) *CourseCreated {
