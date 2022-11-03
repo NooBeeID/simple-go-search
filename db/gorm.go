@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"simple-go-search/config"
+	"simple-go-search/server/models"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -30,6 +31,8 @@ func (d *DB) GetConnection() *DB {
 	}
 
 	d.GormDB = db
+
+	db.Debug().AutoMigrate(models.Course{})
 	return d
 }
 
