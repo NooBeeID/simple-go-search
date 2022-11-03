@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -14,12 +15,13 @@ type Course struct {
 	Description string
 	Price       int
 	Category    Category
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type CourseFilter struct {
 	Title       string
 	Description string
-	Price       int
 	Category    Category
 }
 
@@ -58,6 +60,9 @@ func (c Category) String() string {
 
 func (c *Course) BeforeCreate(tx *gorm.DB) (err error) {
 	c.ID = uuid.New()
+	c.CreatedAt = time.Now()
+	c.UpdatedAt = time.Now()
+
 	err = c.Category.Validate()
 	return
 

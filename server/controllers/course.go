@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"simple-go-search/server/params"
 	"simple-go-search/server/services"
 	"simple-go-search/server/views"
@@ -10,6 +11,7 @@ import (
 
 type CourseController interface {
 	CreateNewCourse(c *gin.Context)
+	FilterCourse(c *gin.Context)
 }
 
 type courseController struct {
@@ -32,5 +34,17 @@ func (course *courseController) CreateNewCourse(c *gin.Context) {
 	}
 
 	resp := course.svc.CreateNewCourse(&req)
+	WriteJsonResponse(c, resp)
+}
+
+func (course *courseController) FilterCourse(c *gin.Context) {
+	var req params.CourseFilter
+	req.Title = c.Query("title")
+	req.Category = c.Query("category")
+	req.Description = c.Query("description")
+
+	fmt.Printf("%+v\n", req)
+
+	resp := course.svc.FilterCourses(&req)
 	WriteJsonResponse(c, resp)
 }

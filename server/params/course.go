@@ -20,3 +20,18 @@ func (c *CreateCourse) ParseToModel() *models.Course {
 		Category:    category,
 	}
 }
+
+type CourseFilter struct {
+	Title       string
+	Description string
+	Category    string
+}
+
+func (c *CourseFilter) ParseToModel() *models.CourseFilter {
+	category := models.Category(c.Category)
+	return &models.CourseFilter{
+		Title:       c.Title,
+		Description: c.Description,
+		Category:    category,
+	}
+}

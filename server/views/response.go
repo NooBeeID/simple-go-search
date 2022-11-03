@@ -21,6 +21,7 @@ const (
 	Err_InvalidPayload ErrorType = "INVALID_PAYLOAD"
 	Err_BadRequest     ErrorType = "BAD_REQUEST"
 	Err_Repository     ErrorType = "REPOSITORY_ERROR"
+	Err_NotFound       ErrorType = "DATA_NOT_FOUND"
 	Err_InternalServer ErrorType = "INTERNAL_SERVER_ERROR"
 )
 
@@ -48,6 +49,10 @@ func RepositoryError(err error) *Response {
 }
 func InternalServerError(err error) *Response {
 	return buildError(err, http.StatusInternalServerError, Err_InternalServer)
+}
+
+func NotFound(err error) *Response {
+	return buildError(err, http.StatusNotFound, Err_NotFound)
 }
 
 func buildSuccess(payload interface{}, status int, msg MsgType) *Response {

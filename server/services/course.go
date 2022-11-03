@@ -8,6 +8,7 @@ import (
 
 type CourseServices interface {
 	CreateNewCourse(req *params.CreateCourse) *views.Response
+	FilterCourses(req *params.CourseFilter) *views.Response
 }
 
 type courseSvc struct {
@@ -30,4 +31,19 @@ func (c *courseSvc) CreateNewCourse(req *params.CreateCourse) *views.Response {
 
 	courseView := views.NewCourseCreated(course)
 	return views.SuccessCreated(courseView)
+}
+
+func (c *courseSvc) FilterCourses(req *params.CourseFilter) *views.Response {
+	filter := req.ParseToModel()
+
+	courses, err := c.repo.FindCourseByFilter(filter)
+	if err != nil {
+		if err.Error() == string(views.Err_NotFound) {
+			return views.NotFound(err)
+		}
+		return views.RepositoryError(err)
+	}
+
+	coursesView := views.NewCoursesFind(courses)
+	return views.SuccessFindAll(coursesView)
 }

@@ -28,5 +28,6 @@ func (r *router) v1Route(route *gin.RouterGroup) {
 	course := route.Group("/courses")
 	{
 		course.POST("", r.course.CreateNewCourse)
+		course.GET("", r.course.FilterCourse)
 	}
 }

@@ -1,9 +1,12 @@
 package gormRepo
 
 import (
+	"errors"
 	"simple-go-search/db"
 	"simple-go-search/server/models"
 	"simple-go-search/server/repositories"
+	"simple-go-search/server/views"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -25,20 +28,22 @@ func (c *gormDB) Create(course *models.Course) error {
 func (c *gormDB) FindCourseByFilter(filter *models.CourseFilter) (*[]models.Course, error) {
 	var courses []models.Course
 
-	title := "%" + filter.Title + "%"
-	desc := "%" + filter.Description + "%"
-	category := "%" + filter.Category + "%"
-	price := filter.Price
+	title := "%" + strings.ToLower(filter.Title) + "%"
+	desc := "%" + strings.ToLower(filter.Description) + "%"
+	category := "%" + strings.ToLower(filter.Category.String()) + "%"
 
-	err := c.db.Where(`
-			title LIKE ? 
-			OR description LIKE ? 
-			OR price=? 
-			OR category LIKE ?
-		`, title, desc, price, category).Find(&courses).Error
+	rows := c.db.Where(`
+			LOWER(title) LIKE ? 
+			AND LOWER(description) LIKE ? 
+			AND LOWER(category) LIKE ?
+		`, title, desc, category).Find(&courses)
 
-	if err != nil {
-		return nil, err
+	if rows.Error != nil {
+		return nil, rows.Error
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, errors.New(string(views.Err_NotFound))
 	}
 
 	return &courses, nil
