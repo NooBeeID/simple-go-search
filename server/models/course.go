@@ -52,6 +52,10 @@ func (c Category) Validate() (err error) {
 	}
 }
 
+func (c Category) String() string {
+	return string(c)
+}
+
 func (c *Course) BeforeCreate(tx *gorm.DB) (err error) {
 	c.ID = uuid.New()
 	err = c.Category.Validate()
