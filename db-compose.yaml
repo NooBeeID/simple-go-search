@@ -6,13 +6,13 @@ services:
     image: postgres:alpine
     restart: always	
     environment:
-      - "POSTGRES_USER=$PQ_SEARCH_USER"
-      - POSTGRES_PASSWORD=${PQ_SEARCH_PASS}
-      - POSTGRES_DB=${PQ_SEARCH_DB}
+      - "POSTGRES_USER=$POSTGRES_USER"
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
     volumes:
-      - $PWD/db-data/${PQ_SEARCH_DB}:/var/lib/postgresql/data
+      - $PWD/db-data/${POSTGRES_DB_NAME}:/var/lib/postgresql/data
     ports:
-      - "8888:5432"
+      - "127.0.0.1:8888:5432"
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
     container_name: es01
@@ -30,7 +30,7 @@ services:
     volumes:
       - ./db-data/search-elastic:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - 127.0.0.1:9200:9200
     networks:
       - elastic
   es02:
